@@ -1,5 +1,5 @@
 hgvs
 cdot
-#uta-rest
+uta-rest
 lazy
 intervaltree
