@@ -2,11 +2,7 @@ import src.uta_clients.json_data_provider as cdot
 import hgvs.dataproviders.uta as uta
 
 import datetime
-import os
-import yaml
 import pytest
-import vcr as vcrpy
-from vcr.filters import decode_response
 from typing import List, Dict
 
 def just_values(dictionaries: List[Dict]) -> List[List]:
@@ -55,7 +51,6 @@ def test_cdot_seq_ne():
 def test_cdot_seq_e_indices():
     """Existing seq with start and end indices."""
     u = uta.connect().get_seq("NC_000007.13", 10000, 10050)
-    #u = yaml_decode('test_seq_e_indices')
     c = cdot.connect().get_seq("NC_000007.13", 10000, 10050)
     assert u == c
 
