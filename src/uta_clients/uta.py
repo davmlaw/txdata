@@ -4,8 +4,7 @@
 
 """
 
-from __future__ import (absolute_import, division, print_function,
-                        unicode_literals)
+from __future__ import absolute_import, division, print_function, unicode_literals
 
 import contextlib
 import inspect
@@ -14,6 +13,7 @@ import os
 import re
 import weakref
 
+import hgvs
 import psycopg2
 import psycopg2.extras
 import psycopg2.pool
@@ -21,8 +21,6 @@ import six
 from bioutils.assemblies import make_ac_name_map
 from bioutils.digests import seq_md5
 from six.moves.urllib import parse as urlparse
-
-import hgvs
 
 from ..dataproviders.interface import Interface
 from ..exceptions import HGVSDataNotAvailableError, HGVSError
@@ -145,7 +143,7 @@ class UTABase(Interface):
         "alignments_for_region": """
             select tx_ac,alt_ac,alt_strand,alt_aln_method,min(start_i) as start_i,max(end_i) as end_i
             from exon_set ES
-            join exon E on ES.exon_set_id=E.exon_set_id 
+            join exon E on ES.exon_set_id=E.exon_set_id
             where alt_ac=?
             group by tx_ac,alt_ac,alt_strand,alt_aln_method
             having min(start_i) < ? and ? <= max(end_i)
