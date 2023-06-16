@@ -1,4 +1,4 @@
-import src.uta_clients.json_data_provider as cdot
+import uta_clients.cdot as cdot
 import hgvs.dataproviders.uta as uta
 
 import datetime
@@ -70,7 +70,7 @@ def test_cdot_acs_for_protein_seq_ne():
     c = cdot.connect().get_acs_for_protein_seq("fake")
     assert u == c
     
-@pytest.mark.skip(reason="not implemented in cdot")
+@pytest.mark.skip(reason="error not implemented in cdot")
 #@pytest.mark.vcr
 def test_cdot_acs_for_protein_seq_ne_nonalphabetical():
     """Non-alphabetic character seq."""
