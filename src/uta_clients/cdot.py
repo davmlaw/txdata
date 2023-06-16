@@ -1,30 +1,30 @@
 import abc
 import gzip
 import json
-import os
-import requests
-
 from collections import defaultdict
-from lazy import lazy
+from typing import List
+
+import requests
+from cdot.assembly_helper import get_ac_name_map
 from hgvs.dataproviders.interface import Interface
 from hgvs.dataproviders.seqfetcher import SeqFetcher
 from intervaltree import IntervalTree
-from typing import List
+from lazy import lazy
 
-from cdot.assembly_helper import get_ac_name_map
 
 def connect():
     """Connect function for uniformity with other hgvs data providers.
     Returns a RESTDataProvider instance."""
     return RESTDataProvider()
 
+
 class AbstractJSONDataProvider(Interface):
     NCBI_ALN_METHOD = "splign"
     required_version = "1.1"
 
     def __init__(self, assemblies: List[str] = None, mode=None, cache=None, seqfetcher=None):
-        """ assemblies: defaults to ["GRCh37", "GRCh38"]
-            seqfetcher defaults to biocommons SeqFetcher()
+        """assemblies: defaults to ["GRCh37", "GRCh38"]
+        seqfetcher defaults to biocommons SeqFetcher()
         """
         if assemblies is None:
             assemblies = ["GRCh37", "GRCh38"]
@@ -76,7 +76,7 @@ class AbstractJSONDataProvider(Interface):
         return self.required_version
 
     def get_assembly_map(self, assembly_name):
-        """return a list of accessions for the specified assembly name (e.g., GRCh38.p5) """
+        """return a list of accessions for the specified assembly name (e.g., GRCh38.p5)"""
         assembly_map = self.assembly_maps.get(assembly_name)
         if assembly_map is None:
             supported_assemblies = ", ".join(self.assembly_maps.keys())
@@ -93,8 +93,8 @@ class AbstractJSONDataProvider(Interface):
     @staticmethod
     def _convert_gap_to_cigar(gap):
         """
-                gap = 'M196 I1 M61 I1 M181'
-                CIGAR = '194=1D60=1D184='
+        gap = 'M196 I1 M61 I1 M181'
+        CIGAR = '194=1D60=1D184='
         """
 
         # This has to/from sequences inverted, so insertion is a deletion
@@ -134,16 +134,16 @@ class AbstractJSONDataProvider(Interface):
                 cigar = str(length) + "="
 
             exon_data = {
-                'tx_ac': tx_ac,
-                'alt_ac': alt_ac,
-                'alt_strand': alt_strand,
-                'alt_aln_method': alt_aln_method,
-                'ord': exon_id,
-                'tx_start_i': tx_start_i,
-                'tx_end_i': tx_end_i,
-                'alt_start_i': alt_start_i,
-                'alt_end_i': alt_end_i,
-                'cigar': cigar,
+                "tx_ac": tx_ac,
+                "alt_ac": alt_ac,
+                "alt_strand": alt_strand,
+                "alt_aln_method": alt_aln_method,
+                "ord": exon_id,
+                "tx_start_i": tx_start_i,
+                "tx_end_i": tx_end_i,
+                "alt_start_i": alt_start_i,
+                "alt_end_i": alt_end_i,
+                "cigar": cigar,
             }
             tx_exons.append(exon_data)
 
@@ -206,8 +206,8 @@ class AbstractJSONDataProvider(Interface):
 
     def get_acs_for_protein_seq(self, seq):
         """
-            This is not implemented. The only caller has comment: 'TODO: drop get_acs_for_protein_seq'
-            And is only ever called as a backup when get_pro_ac_for_tx_ac fails
+        This is not implemented. The only caller has comment: 'TODO: drop get_acs_for_protein_seq'
+        And is only ever called as a backup when get_pro_ac_for_tx_ac fails
         """
         return None
 
@@ -215,7 +215,7 @@ class AbstractJSONDataProvider(Interface):
         gene_info = None
         if g := self._get_gene(gene):
             # UTA produces aliases that look like '{DCML,IMD21,MONOMAC,NFE1B}'
-            uta_style_aliases = '{' + g["aliases"].replace(" ", "") + '}'
+            uta_style_aliases = "{" + g["aliases"].replace(" ", "") + "}"
             gene_info = {
                 "hgnc": g["gene_symbol"],
                 "maploc": g["map_location"],
@@ -233,14 +233,14 @@ class AbstractJSONDataProvider(Interface):
         return pro_ac
 
     def get_similar_transcripts(self, tx_ac):
-        """ UTA specific functionality that uses tx_similarity_v table
-            This is not used by the HGVS library """
+        """UTA specific functionality that uses tx_similarity_v table
+        This is not used by the HGVS library"""
         raise NotImplementedError()
 
 
 class LocalDataProvider(AbstractJSONDataProvider):
-    """ For JSON and Redis providers (implemented in cdot_rest)
-        https://github.com/SACGF/cdot_rest - cdot_rest.redis_data_provider.RedisDataProvider """
+    """For JSON and Redis providers (implemented in cdot_rest)
+    https://github.com/SACGF/cdot_rest - cdot_rest.redis_data_provider.RedisDataProvider"""
 
     @abc.abstractmethod
     def _get_transcript_ids_for_gene(self, gene):
@@ -251,7 +251,7 @@ class LocalDataProvider(AbstractJSONDataProvider):
         pass
 
     def get_tx_for_gene(self, gene):
-        """ return transcript info records for supplied gene, in order of decreasing length """
+        """return transcript info records for supplied gene, in order of decreasing length"""
 
         tx_list = []  # Store in tuples with length, so we can sort before returning
         for transcript_id in self._get_transcript_ids_for_gene(gene):
@@ -274,24 +274,26 @@ class LocalDataProvider(AbstractJSONDataProvider):
         return [x[1] for x in sorted(tx_list, key=lambda x: x[0], reverse=True)]
 
     def get_tx_for_region(self, alt_ac, alt_aln_method, start_i, end_i):
-        """ return transcripts that overlap given region """
+        """return transcripts that overlap given region"""
         tx_list = []
         if alt_aln_method == self.NCBI_ALN_METHOD:
             contig_iv_tree = self._get_contig_interval_tree(alt_ac)
-            for interval in contig_iv_tree[start_i:end_i+1]:
+            for interval in contig_iv_tree[start_i : end_i + 1]:
                 transcript_id = interval.data
                 transcript_data = self._get_transcript(transcript_id)
                 build_data = self._get_transcript_coordinates_for_contig(transcript_data, alt_ac)
                 contig, tx_start, tx_end, strand = self._get_contig_start_end_strand(build_data)
                 if contig == alt_ac:
-                    tx_list.append({
-                        "alt_ac": alt_ac,
-                        "alt_aln_method": self.NCBI_ALN_METHOD,
-                        "alt_strand": strand,
-                        "start_i": tx_start,
-                        "end_i": tx_end,
-                        "tx_ac": transcript_id,
-                    })
+                    tx_list.append(
+                        {
+                            "alt_ac": alt_ac,
+                            "alt_aln_method": self.NCBI_ALN_METHOD,
+                            "alt_strand": strand,
+                            "start_i": tx_start,
+                            "end_i": tx_end,
+                            "tx_ac": transcript_id,
+                        }
+                    )
         return tx_list
 
     @staticmethod
@@ -302,7 +304,7 @@ class LocalDataProvider(AbstractJSONDataProvider):
         tx_by_gene = defaultdict(set)
         tx_intervals = defaultdict(IntervalTree)
         for transcript_id, transcript_data in transcript_iter_items:
-            if gene_name := transcript_data['gene_name']:
+            if gene_name := transcript_data["gene_name"]:
                 tx_by_gene[gene_name].add(transcript_id)
 
             for build_data in transcript_data["genome_builds"].values():
@@ -314,7 +316,8 @@ class LocalDataProvider(AbstractJSONDataProvider):
 
 
 class JSONDataProvider(LocalDataProvider):
-    """ Local JSON file """
+    """Local JSON file"""
+
     def __init__(self, file_or_filename_list, mode=None, cache=None, seqfetcher=None):
         assemblies = set()
         self.transcripts = {}
@@ -354,9 +357,11 @@ class JSONDataProvider(LocalDataProvider):
 
     def get_pro_ac_for_tx_ac(self, tx_ac):
         if self.cdot_data_version < (0, 2, 8):
-            cdot_version = '.'.join(str(v) for v in self.cdot_data_version)
-            msg = f"ProteinID not in your JSON data version '{cdot_version}'. " \
-                  "Please use data generated from cdot >= 0.2.8"
+            cdot_version = ".".join(str(v) for v in self.cdot_data_version)
+            msg = (
+                f"ProteinID not in your JSON data version '{cdot_version}'. "
+                "Please use data generated from cdot >= 0.2.8"
+            )
             raise NotImplementedError(msg)
         return super().get_pro_ac_for_tx_ac(tx_ac)
 
@@ -366,15 +371,16 @@ class JSONDataProvider(LocalDataProvider):
 
     def get_gene_info(self, gene):
         if self.cdot_data_version < (0, 2, 10):
-            cdot_version = '.'.join(str(v) for v in self.cdot_data_version)
-            msg = f"Gene Info not in your JSON data version '{cdot_version}'. " \
-                  "Please use data generated from cdot >= 0.2.10"
+            cdot_version = ".".join(str(v) for v in self.cdot_data_version)
+            msg = (
+                f"Gene Info not in your JSON data version '{cdot_version}'. "
+                "Please use data generated from cdot >= 0.2.10"
+            )
             raise NotImplementedError(msg)
         return super().get_gene_info(gene)
 
 
 class RESTDataProvider(AbstractJSONDataProvider):
-
     def __init__(self, url=None, secure=True, mode=None, cache=None, seqfetcher=None):
         assemblies = ["GRCh37", "GRCh38"]
         super().__init__(assemblies=assemblies, mode=mode, cache=cache, seqfetcher=seqfetcher)
@@ -389,9 +395,9 @@ class RESTDataProvider(AbstractJSONDataProvider):
 
     def _get_from_url(self, url):
         data = None
-        response = requests.get(url)
+        response = requests.get(url, timeout=60)
         if response.ok:
-            if 'application/json' in response.headers.get('Content-Type'):
+            if "application/json" in response.headers.get("Content-Type"):
                 data = response.json()
             else:
                 raise ValueError("Non-json response received for '%s' - are you behind a firewall?" % transcript_url)

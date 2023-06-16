@@ -1,0 +1,46 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      User-Agent:
+      - python-requests/2.31.0
+    method: GET
+    uri: https://cdot.cc/transcripts/gene/VH
+  response:
+    body:
+      string: '{"results": []}'
+    headers:
+      Access-Control-Allow-Origin:
+      - http://203.101.229.44
+      Cache-Control:
+      - max-age=86400
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '15'
+      Content-Type:
+      - application/json
+      Cross-Origin-Opener-Policy:
+      - same-origin
+      Date:
+      - Thu, 15 Jun 2023 23:36:16 GMT
+      Expires:
+      - Fri, 16 Jun 2023 23:36:16 GMT
+      Referrer-Policy:
+      - same-origin
+      Server:
+      - gunicorn
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - DENY
+    status:
+      code: 200
+      message: OK
+version: 1
