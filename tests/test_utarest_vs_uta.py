@@ -63,7 +63,7 @@ def test_utarest_seq_ne():
 def test_utarest_seq_e_indices():
     """Existing seq with start and end indices."""
     #u = uta.connect().get_seq("NC_000007.13", 10000, 10050)
-    u = yaml_decode('test_seq_e_indices')
+    u = yaml_decode('test_utarest_seq_e_indices')
     r = utarest.connect().get_seq("NC_000007.13", 10000, 10050).json()
     assert u == r
 
