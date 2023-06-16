@@ -1,0 +1,56 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      User-Agent:
+      - python-requests/2.31.0
+    method: GET
+    uri: https://cdot.cc/transcript/NM_199425.2
+  response:
+    body:
+      string: '{"biotype": ["protein_coding"], "gene_name": "VSX1", "gene_version":
+        "30813", "genome_builds": {"GRCh37": {"cds_end": 25062732, "cds_start": 25059371,
+        "contig": "NC_000020.10", "exons": [[25059178, 25059588, 2, 787, 1196, null],
+        [25060071, 25060150, 1, 708, 786, null], [25062308, 25063015, 0, 1, 707, null]],
+        "strand": "-", "url": "https://ftp.ncbi.nlm.nih.gov/genomes/all/annotation_releases/9606/105.20190906/GCF_000001405.25_GRCh37.p13/GCF_000001405.25_GRCh37.p13_genomic.gff.gz"},
+        "GRCh38": {"cds_end": 25082096, "cds_start": 25078735, "contig": "NC_000020.11",
+        "exons": [[25078542, 25078952, 2, 787, 1196, null], [25079435, 25079514, 1,
+        708, 786, null], [25081672, 25082379, 0, 1, 707, null]], "strand": "-", "url":
+        "https://ftp.ncbi.nlm.nih.gov/genomes/all/annotation_releases/9606/109.20191205/GCF_000001405.39_GRCh38.p13/GCF_000001405.39_GRCh38.p13_genomic.gff.gz"}},
+        "hgnc": "12723", "id": "NM_199425.2", "protein": "NP_955457.1", "start_codon":
+        283, "stop_codon": 1003}'
+    headers:
+      Access-Control-Allow-Origin:
+      - http://203.101.229.44
+      Cache-Control:
+      - max-age=86400
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '980'
+      Content-Type:
+      - application/json
+      Cross-Origin-Opener-Policy:
+      - same-origin
+      Date:
+      - Thu, 15 Jun 2023 23:36:13 GMT
+      Expires:
+      - Fri, 16 Jun 2023 22:27:50 GMT
+      Referrer-Policy:
+      - same-origin
+      Server:
+      - gunicorn
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - DENY
+    status:
+      code: 200
+      message: OK
+version: 1

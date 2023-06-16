@@ -1,0 +1,45 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      User-Agent:
+      - python-requests/2.31.0
+    method: GET
+    uri: https://cdot.cc/transcript/fake
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAEA02OMRICIQxFe04R9wAy9llKSysvgEuUnUGCEHT29sLSbJXkz5uXr/DkeJEtEXh5
+        B6OwDwg2vuaJ4tQDss4oAJRVApkbC1y5Rod6BAr1QPDBbttJfzli7cJk7p4g06dSEXJtK1zzQvCz
+        BWJTPrsSOIL4tUCh/KV8Rp1aAT287c3e8A9ssYGZswAAAA==
+    headers:
+      Connection:
+      - keep-alive
+      Content-Encoding:
+      - gzip
+      Content-Type:
+      - text/html
+      Cross-Origin-Opener-Policy:
+      - same-origin
+      Date:
+      - Thu, 15 Jun 2023 23:36:24 GMT
+      Referrer-Policy:
+      - same-origin
+      Server:
+      - gunicorn
+      Transfer-Encoding:
+      - chunked
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - DENY
+    status:
+      code: 404
+      message: Not Found
+version: 1
