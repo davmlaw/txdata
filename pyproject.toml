@@ -20,8 +20,8 @@ classifiers = [
 dynamic = ["version"]
 
 [project.urls]
-"Homepage" = "https://github.com/biocommons/uta-rest"
-"Bug Tracker" = "https://github.com/biocommons/uta-rest/issues"
+"Homepage" = "https://github.com/biocommons/uta-clients"
+"Bug Tracker" = "https://github.com/biocommons/uta-clients/issues"
 
 
 [build-system]
@@ -53,7 +53,7 @@ markers = [
 
 [tool.coverage.run]
 branch = true
-source = ["biocommons.uta-rest"]
+source = ["biocommons.uta-clients"]
 omit = ["*_test.py", "*/tests/*"]
 
 
