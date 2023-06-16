@@ -12,9 +12,11 @@ Supported clients include:
 - cdot ([rest](https://github.com/SACGF/cdot/blob/main/cdot/hgvs/dataproviders/json_data_provider.py))
 
 ## Cdot vs Uta
-\* = places where different transcripts have been returned due to cdot and uta represent two different data sources
+Read the official cdot documentation [here](https://github.com/SACGF/cdot/tree/main).
 
-| Function                  | uta       | cdot      |
+\* = places where different transcripts have been returned due to cdot and uta representing two different data sources
+
+| Data Provider Function    | uta       | cdot      |
 | ------------------------- |-----------| ----------|
 | get_seq                   |           |
 | get_acs_for_protein       | *         | *
