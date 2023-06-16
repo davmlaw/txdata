@@ -33,7 +33,7 @@ jobs:
 
     - name: Format check with isort
       run: |
-        isort --check src
+        isort --check src --profile black
 
     - name: Format check with black
       run: |
