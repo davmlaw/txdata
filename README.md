@@ -50,7 +50,7 @@ Assign any of the following supported clients to your hgvs data provider.
     >>> hdp = utaclients.uta_rest.connect()
     >>> hdp = utaclients.cdot.connect()
 
-Then you can get starting using all the functionalities of hgvs.
+Then you can get started using all the functionalities of hgvs.
 
     >>> hdp = utaclients.uta.connect()
 
