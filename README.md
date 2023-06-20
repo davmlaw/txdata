@@ -14,7 +14,7 @@ Supported clients include:
 ## Cdot vs Uta
 Read the official cdot documentation [here](https://github.com/SACGF/cdot).
 
-\* = places where different transcripts have been returned due to cdot and uta representing two different data sources
+\* = places where different transcripts have been returned due to cdot and uta being two different data sources/collectors
 
 | Data Provider Function    | uta       | cdot      |
 | ------------------------- |-----------| ----------|
@@ -26,7 +26,7 @@ Read the official cdot documentation [here](https://github.com/SACGF/cdot).
 | get_tx_for_region         |
 | get_alignments_for_region |           | Not implemented
 | get_tx_identity_info      |
-| get_tx_info               |           | Does not use alt_c when fetching transcripts
+| get_tx_info               |           | Does not use perform alignments (does not use the alt_c argument) when fetching transcripts
 | get_tx_mapping_options    |
 | get_similar_transcripts   |
 | get_pro_ac_for_tx_ac      |
