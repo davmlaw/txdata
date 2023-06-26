@@ -57,3 +57,9 @@ Then you can get started using all the functionalities of hgvs.
     >>> am = hgvs.assemblymapper.AssemblyMapper(hdp,
     ...     assembly_name='GRCh37', alt_aln_method='splign',
     ...     replace_reference=True)
+
+
+## Developer Installation
+
+    $ make devready
+    $ source venv/bin/activate
