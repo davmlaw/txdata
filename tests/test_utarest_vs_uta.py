@@ -33,7 +33,7 @@ def yaml_decode(test_name: str) -> str:
     """Opens a yaml file, gets the response, and returns it decoded."""
     file_path = ("tests/cassettes/{test}.yaml").format(test=test_name)
     with open(file_path, "r") as f:
-        yam = yaml.safe_load(f, Loader=yaml.FullLoader)
+        yam = yaml.safe_load(f)
     response = yam["interactions"][0]["response"]
     yam_decode = decode_response(response)["body"]["string"]
     if isinstance(yam_decode, bytes):
