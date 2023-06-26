@@ -3,7 +3,7 @@ repos:
     rev: v2.3.0
     hooks:
     -   id: flake8
-        args: ["--ignore=F821"]
+        args: ["--ignore=F821,E133,E203"]
     -   id: check-yaml
     -   id: end-of-file-fixer
     -   id: trailing-whitespace
