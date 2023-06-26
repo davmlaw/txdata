@@ -1,10 +1,9 @@
-# See python-package.yml to see why certain quality checks are commented out.
-
 repos:
 -   repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v2.3.0
     hooks:
-    #-   id: flake8
+    -   id: flake8
+        args: ["--ignore=F821,E133,E203"]
     -   id: check-yaml
     -   id: end-of-file-fixer
     -   id: trailing-whitespace

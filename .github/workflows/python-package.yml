@@ -23,13 +23,13 @@ jobs:
         python -m pip install --upgrade pip
         pip install --use-deprecated=legacy-resolver -e .[dev]
 
-    #   Commented out in order to preserve original code in uta.py
-    # - name: Lint with flake8
-    #   run: |
-    #     # stop the build if there are Python syntax errors or undefined names
-    #     flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-    #     # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
-    #     flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+    - name: Lint with flake8
+      run: |
+        # stop the build if there are Python syntax errors or undefined names
+        # ignore F821 to preserve original code in uta.py
+        flake8 . --count --select=E9,F63,F7,F82 --ignore=F821,E133,E203 --show-source --statistics
+        # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
+        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
 
     - name: Format check with isort
       run: |

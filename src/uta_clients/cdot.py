@@ -124,7 +124,7 @@ class AbstractJSONDataProvider(Interface):
         exons = assembly_coordinates["exons"]
         alt_strand = 1 if assembly_coordinates["strand"] == "+" else -1
 
-        for (alt_start_i, alt_end_i, exon_id, cds_start_i, cds_end_i, gap) in exons:
+        for alt_start_i, alt_end_i, exon_id, cds_start_i, cds_end_i, gap in exons:
             tx_start_i = cds_start_i - 1
             tx_end_i = cds_end_i
             if gap is not None:
