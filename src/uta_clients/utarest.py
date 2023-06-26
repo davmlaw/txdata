@@ -61,8 +61,8 @@ class UTAREST(Interface):
             raise Exception("Ensure there is a matching value for each parameter name.")
         retval = "?"
         params_added = False
-        for (param, name) in zip(params, names):
-            if not param == None:
+        for param, name in zip(params, names):
+            if param is not None:
                 if params_added:
                     retval += "&"
                 retval += ("{name}={param}").format(name=name, param=param)
