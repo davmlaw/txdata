@@ -1,10 +1,6 @@
-# UTA Rest
-"""implements an hgvs data provider interface using a REST api to UTA
-(https://github.com/biocommons/uta-rest)
-
-which uses:
-(https://github.com/biocommons/uta)
-
+"""
+This module will eventually be replaced with the import statement:
+from uta-rest import connect
 """
 
 import os
