@@ -1,0 +1,41 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      User-Agent:
+      - python-requests/2.31.0
+    method: GET
+    uri: https://cdot.cc/transcripts/region/fake/splign/0/50
+  response:
+    body:
+      string: "\n<!doctype html>\n<html lang=\"en\">\n<head>\n  <title>Server Error
+        (500)</title>\n</head>\n<body>\n  <h1>Server Error (500)</h1><p></p>\n</body>\n</html>\n"
+    headers:
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '145'
+      Content-Type:
+      - text/html
+      Cross-Origin-Opener-Policy:
+      - same-origin
+      Date:
+      - Wed, 05 Jul 2023 17:03:03 GMT
+      Referrer-Policy:
+      - same-origin
+      Server:
+      - gunicorn
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - DENY
+    status:
+      code: 500
+      message: Internal Server Error
+version: 1
