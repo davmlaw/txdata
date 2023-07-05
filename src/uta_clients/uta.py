@@ -1,1 +1,1 @@
-from hgvs.dataproviders.uta import connect
+from hgvs.dataproviders.uta import HGVSDataNotAvailableError, HGVSError, connect

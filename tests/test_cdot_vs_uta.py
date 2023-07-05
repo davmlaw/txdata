@@ -1,10 +1,9 @@
 import datetime
 from typing import Dict, List
 
-import hgvs.dataproviders.uta as uta
 import pytest
 
-import src.uta_clients.cdot as cdot
+from src.uta_clients import cdot, uta
 
 
 def just_values(dictionaries: List[Dict]) -> List[List]:
@@ -63,7 +62,7 @@ def test_cdot_seq_e_indices():
     assert u == c
 
 
-@pytest.mark.skip(reason="cdot has different transcripts than uta")
+@pytest.mark.skip(reason="not implemented in cdot")
 # @pytest.mark.vcr
 def test_cdot_acs_for_protein_seq_e():
     """Existing seq."""
@@ -72,7 +71,7 @@ def test_cdot_acs_for_protein_seq_e():
     assert u == c
 
 
-@pytest.mark.skip(reason="cdot has different transcripts than uta")
+@pytest.mark.skip(reason="not implemented in cdot")
 # @pytest.mark.vcr
 def test_cdot_acs_for_protein_seq_ne():
     """Nonexisting seq."""
@@ -81,7 +80,7 @@ def test_cdot_acs_for_protein_seq_ne():
     assert u == c
 
 
-@pytest.mark.skip(reason="error not implemented in cdot")
+@pytest.mark.skip(reason="not implemented in cdot")
 # @pytest.mark.vcr
 def test_cdot_acs_for_protein_seq_ne_nonalphabetical():
     """Non-alphabetic character seq."""
@@ -200,8 +199,7 @@ def test_cdot_tx_for_region_ne_params():
         uta.connect().get_tx_for_region("fake", "splign")
 
 
-@pytest.mark.skip(reason="not implemented in cdot")
-# @pytest.mark.vcr
+@pytest.mark.vcr
 def test_cdot_alignments_for_region_e():  # Need example
     """Existing region."""
     u = uta.connect().get_alignments_for_region("NC_000007.13", 0, 50)
@@ -209,8 +207,7 @@ def test_cdot_alignments_for_region_e():  # Need example
     assert u == c
 
 
-@pytest.mark.skip(reason="not implemented in cdot")
-# @pytest.mark.vcr
+@pytest.mark.vcr
 def test_cdot_alignments_for_region_ne():
     """Nonexisting region"""
     u = uta.connect().get_alignments_for_region("fake", 0, 50)
@@ -218,8 +215,7 @@ def test_cdot_alignments_for_region_ne():
     assert u == c
 
 
-@pytest.mark.skip(reason="not implemented in cdot")
-# @pytest.mark.vcr
+@pytest.mark.vcr
 def test_cdot_alignments_region_e_params():
     """Existing region with only some params."""
     with pytest.raises(TypeError):
@@ -228,8 +224,7 @@ def test_cdot_alignments_region_e_params():
         uta.connect().get_alignments_for_region("NC_000007.13")
 
 
-@pytest.mark.skip(reason="not implemented in cdot")
-# @pytest.mark.vcr
+@pytest.mark.vcr
 def test_cdot_alignments_region_ne_params():
     """Existing region with only some params."""
     with pytest.raises(TypeError):
@@ -262,11 +257,11 @@ def test_cdot_tx_info_e():
     assert u == c
 
 
-@pytest.mark.xfail
 @pytest.mark.vcr
 def test_cdot_tx_info_ne():
     """Nonexisting seq."""
-    assert cdot.connect().get_tx_info("NM_199425.2", "fake", "splign") == None
+    with pytest.raises(cdot.HGVSDataNotAvailableError):
+        cdot.connect().get_tx_info("NM_199425.2", "fake", "splign")
     with pytest.raises(uta.HGVSDataNotAvailableError):
         uta.connect().get_tx_info("NM_199425.2", "fake", "splign")
 
