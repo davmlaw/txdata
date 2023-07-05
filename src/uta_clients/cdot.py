@@ -1,8 +1,4 @@
-from cdot.hgvs.dataproviders import (
-    HGVSDataNotAvailableError,
-    NotImplementedError,
-    RESTDataProvider,
-)
+from cdot.hgvs.dataproviders import HGVSDataNotAvailableError, RESTDataProvider
 
 
 def connect():
