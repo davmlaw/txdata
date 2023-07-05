@@ -19,16 +19,16 @@ Read the official cdot documentation [here](https://github.com/SACGF/cdot).
 | Data Provider Function    | uta       | cdot      |
 | ------------------------- |-----------| ----------|
 | get_seq                   |           |
-| get_acs_for_protein       | *         | *
+| get_acs_for_protein_seq   |           | Not implemented (note in hgvs to drop this method)
 | get_gene_info             | Includes datetime of when transcript was added  |
 | get_tx_exons              | Includes the following additional fields: hgnc, tx_aseq, alt_aseq, test_exon_set_id, aes_exon_set_id, tx_exon_id, alt_exon_id, exon_aln_id
 | get_tx_for_gene           | *         | *
 | get_tx_for_region         |
-| get_alignments_for_region |           | Not implemented
+| get_alignments_for_region |           |
 | get_tx_identity_info      |
-| get_tx_info               |           | Does not perform alignments (does not use the alt_c argument) when fetching transcripts
+| get_tx_info               |           |
 | get_tx_mapping_options    |
-| get_similar_transcripts   |
+| get_similar_transcripts   |           | Not implemented (hgvs does not use this function)
 | get_pro_ac_for_tx_ac      |
 | get_assembly_map          |
 
@@ -47,7 +47,7 @@ In python:
 Assign any of the following supported clients to your hgvs data provider.
 
     >>> hdp = utaclients.uta.connect()
-    >>> hdp = utaclients.uta_rest.connect()
+    >>> hdp = utaclients.utarest.connect()
     >>> hdp = utaclients.cdot.connect()
 
 Then you can get started using all the functionalities of hgvs.
