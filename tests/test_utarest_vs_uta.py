@@ -7,7 +7,7 @@ import pytest
 import yaml
 from vcr.filters import decode_response
 
-import src.uta_clients.utarest as utarest
+from uta_clients import utarest
 
 os.environ["UTAREST_URL"] = "http://127.0.0.1:8000"  # Used in utarest.connect()
 

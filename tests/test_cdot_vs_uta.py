@@ -3,7 +3,7 @@ from typing import Dict, List
 
 import pytest
 
-from src.uta_clients import cdot, uta
+from uta_clients import cdot, uta
 
 
 def just_values(dictionaries: List[Dict]) -> List[List]:
