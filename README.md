@@ -21,7 +21,7 @@ Read the official cdot documentation [here](https://github.com/SACGF/cdot).
 | get_seq                   |           |
 | get_acs_for_protein_seq   |           | Not implemented (note in hgvs to drop this method)
 | get_gene_info             | Includes datetime of when transcript was added  |
-| get_tx_exons              | Includes the following additional fields: hgnc, tx_aseq, alt_aseq, test_exon_set_id, aes_exon_set_id, tx_exon_id, alt_exon_id, exon_aln_id
+| get_tx_exons              | Includes the following additional fields: hgnc, tx_aseq, alt_aseq, tx_exon_set_id, alt_exon_set_id, tx_exon_id, alt_exon_id, exon_aln_id
 | get_tx_for_gene           | *         | *
 | get_tx_for_region         |
 | get_alignments_for_region |           |
