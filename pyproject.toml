@@ -1,5 +1,5 @@
 [project]
-name = "biocommons.uta_rest"
+name = "biocommons.txdata"
 authors = [
   { name="Reece Hart", email="reece@myome.com" },
   { name="David Lawrence", email="davmlaw@gmail.com" },
