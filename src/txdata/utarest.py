@@ -16,13 +16,28 @@ def connect():
     return UTAREST(url)
 
 
+class UTARESTSeqFetcher:
+    """ SeqFetcher implementation that goes through UTA REST service """
+    def __init__(self, server_url):
+        self.server = server_url
+
+    def fetch_seq(self, ac, start_i=None, end_i=None):
+        url = f"{self.server}/seq/{ac}"
+        url += _optional_parameters(["start_i", "end_i"], [start_i, end_i])
+        return requests.get(url, timeout=120).json()
+
+
+
 class UTAREST(Interface):
     required_version = "1.0"
 
-    def __init__(self, server_url, mode=None, cache=None, timeout=60):
+    def __init__(self, server_url, mode=None, cache=None, timeout=60, seqfetcher=None):
         self.server = server_url
         self.timeout = timeout
         self.pingresponse = requests.get(server_url + "/ping", timeout=self.timeout).json()
+        if seqfetcher is None:
+            seqfetcher = UTARESTSeqFetcher(server_url)
+        self.seqfetcher = seqfetcher
         super(UTAREST, self).__init__(mode, cache)
 
     def __str__(self):
@@ -47,32 +62,8 @@ class UTAREST(Interface):
     def sequence_source(self) -> str:
         return self.pingresponse["sequence_source"]
 
-    def optional_parameters(self, names: list, params: list) -> str:
-        """
-        returns a string representation of query parameters that can be appended to a url
-        example: optional_parameters(["start_i", "end_i", "align_method"], [0, 1, "splign"]))
-        returns: ?start_i=0&end_i=1&align_method=splign
-        """
-        if not len(names) == len(params):
-            raise Exception("Ensure there is a matching value for each parameter name.")
-        retval = "?"
-        params_added = False
-        for (param, name) in zip(params, names):
-            if param:
-                if params_added:
-                    retval += "&"
-                retval += f"{name}={param}"
-                params_added = True
-        return retval
-
     def get_seq(self, ac: str, start_i: Optional[int] = None, end_i: Optional[int] = None) -> str:
-        """
-        returns a sequence for a given accession.
-        can return a portion of a sequence when start and end indices are specified.
-        """
-        url = f"{self.server}/seq/{ac}"
-        url += self.optional_parameters(["start_i", "end_i"], [start_i, end_i])
-        return requests.get(url, timeout=120).json()
+        return self.seqfetcher.fetch_seq(ac, start_i, end_i)
 
     def get_acs_for_protein_seq(self, seq: str) -> List:
         """
@@ -188,7 +179,7 @@ class UTAREST(Interface):
         :param str alt_aln_method: OPTIONAL alignment method (e.g., splign)
         """
         url = f"{self.server}/alignments_for_region/{alt_ac}?start_i={start_i}&end_i={end_i}"
-        self.optional_parameters(["alt_aln_method"], [alt_aln_method])
+        _optional_parameters(["alt_aln_method"], [alt_aln_method])
         """
         Technically fewer lines of execution
         if not alt_aln_method == None:
@@ -316,3 +307,22 @@ class UTAREST(Interface):
         """Return a list of accessions for the specified assembly name (e.g., GRCh38.p5)."""
         url = f"{self.server}/assembly_map/{assembly_name}"
         return requests.get(url, timeout=self.timeout).json()
+
+
+def _optional_parameters(self, names: list, params: list) -> str:
+    """
+    returns a string representation of query parameters that can be appended to a url
+    example: optional_parameters(["start_i", "end_i", "align_method"], [0, 1, "splign"]))
+    returns: ?start_i=0&end_i=1&align_method=splign
+    """
+    if not len(names) == len(params):
+        raise Exception("Ensure there is a matching value for each parameter name.")
+    retval = "?"
+    params_added = False
+    for (param, name) in zip(params, names):
+        if param:
+            if params_added:
+                retval += "&"
+            retval += f"{name}={param}"
+            params_added = True
+    return retval
