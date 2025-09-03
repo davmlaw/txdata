@@ -19,22 +19,21 @@ def connect():
 class UTAREST(Interface):
     required_version = "1.0"
 
-    def __init__(self, server_url, mode=None, cache=None):
+    def __init__(self, server_url, mode=None, cache=None, timeout=60):
         self.server = server_url
-        self.pingresponse = requests.get(server_url + "/ping", timeout=5).json()
+        self.timeout = timeout
+        self.pingresponse = requests.get(server_url + "/ping", timeout=self.timeout).json()
         super(UTAREST, self).__init__(mode, cache)
 
     def __str__(self):
-        return (
-            "{n} <data_version:{dv}; schema_version:{sv}; application_name={self.application_name};"
-            " url={self.url}; sequences-from={sf}>"
-        ).format(
-            n=type(self).__name__,
-            self=self,
-            dv=self.data_version(),
-            sv=self.schema_version(),
-            sf=self.sequence_source(),
-        )
+        n = type(self).__name__
+        dv = self.data_version()
+        sv = self.schema_version()
+        sf = self.sequence_source()
+        url = self.server
+        application_name = "UTA-REST"
+        return (f"{n} <data_version:{dv}; schema_version:{sv}; {application_name=};"
+                f"{url=}; sequences-from={sf}>")
 
     ############################################################################
     # Queries
@@ -62,7 +61,7 @@ class UTAREST(Interface):
             if param:
                 if params_added:
                     retval += "&"
-                retval += ("{name}={param}").format(name=name, param=param)
+                retval += f"{name}={param}"
                 params_added = True
         return retval
 
@@ -71,7 +70,7 @@ class UTAREST(Interface):
         returns a sequence for a given accession.
         can return a portion of a sequence when start and end indices are specified.
         """
-        url = ("{serv}/seq/{ac}").format(serv=self.server, ac=ac)
+        url = f"{self.server}/seq/{ac}"
         url += self.optional_parameters(["start_i", "end_i"], [start_i, end_i])
         return requests.get(url, timeout=120).json()
 
@@ -82,8 +81,8 @@ class UTAREST(Interface):
         MD5-based accession (MD5_01234abc...def56789) at the end of the
         list.
         """
-        url = ("{serv}/acs_for_protein_seq/{seq}").format(serv=self.server, seq=seq)
-        return requests.get(url, timeout=5).json()
+        url = f"{self.server}/acs_for_protein_seq/{seq}"
+        return requests.get(url, timeout=self.timeout).json()
 
     def get_gene_info(self, gene: str) -> dict:
         """
@@ -103,8 +102,8 @@ class UTAREST(Interface):
         }
 
         """
-        url = ("{serv}/gene_info/{gene}").format(serv=self.server, gene=gene)
-        return requests.get(url, timeout=5).json()
+        url = f"{self.server}/gene_info/{gene}"
+        return requests.get(url, timeout=self.timeout).json()
 
     def get_tx_exons(self, tx_ac: str, alt_ac: str, alt_aln_method: str) -> dict:
         """
@@ -152,10 +151,8 @@ class UTAREST(Interface):
         'NM_199425.2'
 
         """
-        url = ("{serv}/tx_exons/{tx_ac}/{alt_ac}?alt_aln_method={alt_aln_method}").format(
-            serv=self.server, tx_ac=tx_ac, alt_ac=alt_ac, alt_aln_method=alt_aln_method
-        )
-        return requests.get(url, timeout=5).json()
+        url = f"{self.server}/tx_exons/{tx_ac}/{alt_ac}?alt_aln_method={alt_aln_method}"
+        return requests.get(url, timeout=self.timeout).json()
 
     def get_tx_for_gene(self, gene: str) -> List:
         """
@@ -164,8 +161,8 @@ class UTAREST(Interface):
         :param gene: HGNC gene name
         :type gene: str
         """
-        url = ("{serv}/tx_for_gene/{gene}").format(serv=self.server, gene=gene)
-        return requests.get(url, timeout=5).json()
+        url = f"{self.server}/tx_for_gene/{gene}"
+        return requests.get(url, timeout=self.timeout).json()
 
     def get_tx_for_region(self, alt_ac: str, alt_aln_method: str, start_i: int, end_i: int) -> List:
         """
@@ -176,10 +173,8 @@ class UTAREST(Interface):
         :param int start_i: 5' bound of region
         :param int end_i: 3' bound of region
         """
-        url = ("{serv}/tx_for_region/{alt_ac}?alt_aln_method={alt_aln_method}&start_i={start_i}&end_i={end_i}").format(
-            serv=self.server, alt_ac=alt_ac, alt_aln_method=alt_aln_method, start_i=start_i, end_i=end_i
-        )
-        return requests.get(url, timeout=5).json()
+        url = f"{self.server}/tx_for_region/{alt_ac}?alt_aln_method={alt_aln_method}&start_i={start_i}&end_i={end_i}"
+        return requests.get(url, timeout=self.timeout).json()
 
     def get_alignments_for_region(
         self, alt_ac: str, start_i: int, end_i: int, alt_aln_method: Optional[str] = None
@@ -192,16 +187,14 @@ class UTAREST(Interface):
         :param int end_i: 3' bound of region
         :param str alt_aln_method: OPTIONAL alignment method (e.g., splign)
         """
-        url = ("{serv}/alignments_for_region/{alt_ac}?start_i={start_i}&end_i={end_i}").format(
-            serv=self.server, alt_ac=alt_ac, start_i=start_i, end_i=end_i
-        )
+        url = f"{self.server}/alignments_for_region/{alt_ac}?start_i={start_i}&end_i={end_i}"
         self.optional_parameters(["alt_aln_method"], [alt_aln_method])
         """
         Technically fewer lines of execution
         if not alt_aln_method == None:
-            url += ("alt_aln_method={alt_aln_method}").format(alt_aln_method=alt_aln_method)
+            url += f"alt_aln_method={alt_aln_method}"
         """
-        return requests.get(url, timeout=5).json()
+        return requests.get(url, timeout=self.timeout).json()
 
     def get_tx_identity_info(self, tx_ac: str) -> dict:
         """returns features associated with a single transcript.
@@ -221,8 +214,8 @@ class UTAREST(Interface):
         }
 
         """
-        url = ("{serv}/tx_identity_info/{tx_ac}").format(serv=self.server, tx_ac=tx_ac)
-        return requests.get(url, timeout=5).json()
+        url = f"{self.server}/tx_identity_info/{tx_ac}"
+        return requests.get(url, timeout=self.timeout).json()
 
     def get_tx_info(self, tx_ac: str, alt_ac: str, alt_aln_method: str) -> dict:
         """return a single transcript info for supplied accession (tx_ac, alt_ac, alt_aln_method), or None if not found
@@ -247,10 +240,8 @@ class UTAREST(Interface):
         }
 
         """
-        url = ("{serv}/tx_info/{tx_ac}/{alt_ac}?alt_aln_method={alt_aln_method}").format(
-            serv=self.server, tx_ac=tx_ac, alt_ac=alt_ac, alt_aln_method=alt_aln_method
-        )
-        return requests.get(url, timeout=5).json()
+        url = f"{self.server}/tx_info/{tx_ac}/{alt_ac}?alt_aln_method={alt_aln_method}"
+        return requests.get(url, timeout=self.timeout).json()
 
     def get_tx_mapping_options(self, tx_ac: str) -> dict:
         """Return all transcript alignment sets for a given transcript
@@ -269,8 +260,8 @@ class UTAREST(Interface):
         }
 
         """
-        url = ("{serv}/tx_mapping_options/{tx_ac}").format(serv=self.server, tx_ac=tx_ac)
-        return requests.get(url, timeout=5).json()
+        url = f"{self.server}/tx_mapping_options/{tx_ac}"
+        return requests.get(url, timeout=self.timeout).json()
 
     def get_similar_transcripts(self, tx_ac: str) -> List:
         """Return a list of transcripts that are similar to the given
@@ -312,16 +303,16 @@ class UTAREST(Interface):
         sequence.
 
         """
-        url = ("{serv}/similar_transcripts/{tx_ac}").format(serv=self.server, tx_ac=tx_ac)
-        return requests.get(url, timeout=5).json()
+        url = f"{self.server}/similar_transcripts/{tx_ac}"
+        return requests.get(url, timeout=self.timeout).json()
 
     def get_pro_ac_for_tx_ac(self, tx_ac: str) -> Union[str, None]:
         """Return the (single) associated protein accession for a given transcript
         accession, or None if not found."""
-        url = ("{serv}/pro_ac_for_tx_ac/{tx_ac}").format(serv=self.server, tx_ac=tx_ac)
-        return requests.get(url, timeout=5).json()
+        url = f"{self.server}/pro_ac_for_tx_ac/{tx_ac}"
+        return requests.get(url, timeout=self.timeout).json()
 
     def get_assembly_map(self, assembly_name: str) -> dict:
         """Return a list of accessions for the specified assembly name (e.g., GRCh38.p5)."""
-        url = ("{serv}/assembly_map/{assembly_name}").format(serv=self.server, assembly_name=assembly_name)
-        return requests.get(url, timeout=5).json()
+        url = f"{self.server}/assembly_map/{assembly_name}"
+        return requests.get(url, timeout=self.timeout).json()
